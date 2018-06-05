@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import cn.edu.gdmec.android.myapplication.R;
 import cn.edu.gdmec.android.myapplication.liereader.Bean.MoviesBean;
-import cn.edu.gdmec.android.myapplication.liereader.ItemMovieOnAdapter;
 import cn.edu.gdmec.android.myapplication.liereader.Movie.Presenter.MoviesPresenter;
 import cn.edu.gdmec.android.myapplication.liereader.Movie.View.IMoviesView;
 
@@ -23,10 +22,12 @@ import cn.edu.gdmec.android.myapplication.liereader.Movie.View.IMoviesView;
 
 public class FgMovieFragment extends Fragment implements IMoviesView {
 
-    private RecyclerView rv_movie_on;
     private MoviesPresenter moviesPresenter;
+    private RecyclerView rv_movie_on;
     private SwipeRefreshLayout srl_movie;
     private ItemMovieOnAdapter movieOnAdapter;
+    private ItemMovieTop250Adapter movieTop250Adapter;
+    private RecyclerView rv_movie_top250;
 
 
     @Override
@@ -35,29 +36,41 @@ public class FgMovieFragment extends Fragment implements IMoviesView {
         return inflater.inflate(R.layout.fg_movie, null);
     }
 
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         moviesPresenter = new MoviesPresenter(this);
         srl_movie = view.findViewById(R.id.srl_movie);
         rv_movie_on = view.findViewById(R.id.rv_movie_on);
+        rv_movie_top250=view.findViewById(R.id.rv_movie_top250);
         movieOnAdapter = new ItemMovieOnAdapter(getActivity());
+        movieTop250Adapter = new ItemMovieTop250Adapter(getActivity());
         srl_movie.setColorSchemeColors(Color.parseColor("#ffce3d3a"));
-        moviesPresenter.loadNews("in_theaters");
+        moviesPresenter.loadMovies("in_theaters");
+        moviesPresenter.loadMovies("top250");
         srl_movie.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                moviesPresenter.loadNews("in_theaters");
+                moviesPresenter.loadMovies("in_theaters");
+                moviesPresenter.loadMovies("top250");
             }
         });
     }
 
-
     @Override
     public void showNews(MoviesBean moviesBean) {
-        movieOnAdapter.setData(moviesBean.getSubjects());
-        rv_movie_on.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rv_movie_on.setAdapter(movieOnAdapter);
+        if (moviesBean.getTotal()==250){
+            movieTop250Adapter.setData(moviesBean.getSubjects());
+            rv_movie_top250.setLayoutManager(new LinearLayoutManager(getActivity(),
+                    LinearLayoutManager.HORIZONTAL,false));
+            rv_movie_top250.setHorizontalScrollBarEnabled(true);
+            rv_movie_top250.setAdapter(movieTop250Adapter);
+        }else {
+            movieOnAdapter.setData(moviesBean.getSubjects());
+            rv_movie_on.setLayoutManager(new LinearLayoutManager(getActivity()));
+            rv_movie_on.setAdapter(movieOnAdapter);
+        }
     }
 
     @Override

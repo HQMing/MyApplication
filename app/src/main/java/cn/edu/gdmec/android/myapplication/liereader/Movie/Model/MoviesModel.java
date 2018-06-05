@@ -37,8 +37,8 @@ public class MoviesModel implements IMoviesModel {
                     }
 
                     @Override
-                    public void onNext(MoviesBean MoviesBean) {
-                        iOnLoadListener.success(MoviesBean);
+                    public void onNext(MoviesBean moviesBean) {
+                        iOnLoadListener.success(moviesBean);
                     }
                 });
     }

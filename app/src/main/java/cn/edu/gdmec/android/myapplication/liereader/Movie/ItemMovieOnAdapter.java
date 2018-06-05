@@ -1,4 +1,4 @@
-package cn.edu.gdmec.android.myapplication.liereader;
+package cn.edu.gdmec.android.myapplication.liereader.Movie;
 
 
 import android.content.Context;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.gdmec.android.myapplication.R;
+import cn.edu.gdmec.android.myapplication.liereader.ADetailActivity;
 import cn.edu.gdmec.android.myapplication.liereader.Bean.MoviesBean;
 
 /**

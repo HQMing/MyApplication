@@ -5,5 +5,7 @@ package cn.edu.gdmec.android.myapplication.liereader.Movie.Presenter;
  */
 
 public interface IMoviesPresenter {
+    void loadMovies(String total);
+
     void loadNews(String total);
 }
