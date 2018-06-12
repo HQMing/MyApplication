@@ -1,5 +1,6 @@
 package cn.edu.gdmec.android.myapplication.liereader.Http;
 
+import cn.edu.gdmec.android.myapplication.liereader.Bean.CityBean;
 import cn.edu.gdmec.android.myapplication.liereader.Bean.MoviesBean;
 import cn.edu.gdmec.android.myapplication.liereader.Bean.NewsBean;
 import cn.edu.gdmec.android.myapplication.liereader.Bean.TodayBean;
@@ -25,9 +26,14 @@ public interface RetrofitService {
                            @Path("startPage") int startPage);
     @GET("/v2/movie/{total}")
     Observable<MoviesBean> getMovie(@Path("total") String total);
-    @GET("new/feed/v51")
+
+    // http://is.snssdk.com/api/news/feed/v51/?category=video
+    @GET("news/feed/v51/")
     Observable<TodayBean> getToday(@Query("category") String category);
     @GET
     Observable<VideoUrlBean> getVideoUrl(@Url String url);
+
+    // http://wthrcdn.etouch.cn/weather_mini?citykey=101010100
+
 
 }

@@ -1,5 +1,7 @@
 package cn.edu.gdmec.android.myapplication.liereader.Video.Model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ import rx.schedulers.Schedulers;
  */
 
 public class VideoModel implements IVideoModel{
+    private String TAG = "VideoModel";
     @Override
     public void loadVideo(String category, final IVideoLoadListener iVideoLoadListener) {
         final List<VideoUrlBean> videoList = new ArrayList<>();
@@ -38,6 +41,7 @@ public class VideoModel implements IVideoModel{
                                         TodayContentBean contentBean = VideoPresenter.getTodayContentBean(content);
                                         contentBeans.add(contentBean);
                                         String api = VideoPresenter.getVideoContentApi(contentBean.getVideo_id());
+                                        Log.i(TAG, "call: "+api);
                                         return retrofitHelper.getVideoUrl(api);
                                     }
                                 });
@@ -49,6 +53,7 @@ public class VideoModel implements IVideoModel{
                     @Override
                     public void onCompleted() {
                         iVideoLoadListener.videoUrlSuccess(videoList, contentBeans);
+                        //Log.i(TAG, "onCompleted: " + videoList.size());
                     }
 
                     @Override
