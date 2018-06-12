@@ -37,14 +37,14 @@ public class VideoPresenter implements IVideoPresenter,IVideoLoadListener{
     }
 
     @Override
-    public void videoUrlSuccess(List<VideoUrlBean> videoUrlBeans, List<TodayContentBean> contentBeans) {
+    public void videoUrlSuccess(List<VideoUrlBean> mainUrlBeans, List<TodayContentBean> contentBeans) {
         List<String> videoList = new ArrayList<>();
         iVideoView.hideDialog();
-        /*for (int i = 0; i < mainUrlBeans.size(); i++) {
+        for (int i = 0; i < mainUrlBeans.size(); i++) {
             String mainUrl = mainUrlBeans.get(i).getData().getVideo_list().getVideo_1().getMain_url();
             final String url1 = (new String(Base64.decode(mainUrl.getBytes(), Base64.DEFAULT)));
             videoList.add(url1);
-        }*/
+        }
         iVideoView.showVideo(contentBeans, videoList);
     }
 
