@@ -4,7 +4,7 @@ import cn.edu.gdmec.android.myapplication.liereader.Bean.NewsBean;
 import cn.edu.gdmec.android.myapplication.liereader.Http.Api;
 import cn.edu.gdmec.android.myapplication.liereader.News.FgNewsFragment;
 import cn.edu.gdmec.android.myapplication.liereader.News.Model.INewsModel;
-import cn.edu.gdmec.android.myapplication.liereader.News.Model.IOnLoadListener;
+import cn.edu.gdmec.android.myapplication.liereader.News.Model.INewsLoadListener;
 import cn.edu.gdmec.android.myapplication.liereader.News.Model.NewsModel;
 import cn.edu.gdmec.android.myapplication.liereader.News.View.INewsView;
 
@@ -12,7 +12,7 @@ import cn.edu.gdmec.android.myapplication.liereader.News.View.INewsView;
  * Created by apple on 18/5/29.
  */
 
-public class NewsPresenter implements INewsPresenter,IOnLoadListener{
+public class NewsPresenter implements INewsPresenter,INewsLoadListener {
     private INewsModel iNewsModel;
     private INewsView iNewsView;
 
@@ -22,7 +22,10 @@ public class NewsPresenter implements INewsPresenter,IOnLoadListener{
     }
     @Override
     public void loadNews(int type, int startPage) {
-        iNewsView.showDialog();
+        if(startPage==0){
+            iNewsView.showDialog();
+        }
+
         switch (type){
             case FgNewsFragment.NEWS_TYPE_TOP:
                 iNewsModel.loadNews("headline",startPage, Api.HEADLINE_ID,this);
@@ -48,5 +51,11 @@ public class NewsPresenter implements INewsPresenter,IOnLoadListener{
     public void fail(String error) {
         iNewsView.hideDialog();
         iNewsView.showErrorMsg(error);
+    }
+
+    @Override
+    public void loadMoreSuccess(NewsBean newsBean) {
+        iNewsView.hideDialog();
+        iNewsView.showMoreNews(newsBean);
     }
 }

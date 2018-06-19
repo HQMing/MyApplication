@@ -3,9 +3,6 @@ package cn.edu.gdmec.android.myapplication.liereader.News.Model;
 import cn.edu.gdmec.android.myapplication.liereader.Bean.NewsBean;
 import cn.edu.gdmec.android.myapplication.liereader.Http.Api;
 import cn.edu.gdmec.android.myapplication.liereader.Http.RetrofitHelper;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -16,7 +13,7 @@ import rx.schedulers.Schedulers;
 
 public class NewsModel implements INewsModel{
     @Override
-    public void loadNews(String hostType, int startPage, String id, final IOnLoadListener iOnLoadListener) {
+    public void loadNews(String hostType, final int startPage, String id, final INewsLoadListener iNewsLoadListener) {
         RetrofitHelper retrofitHelper = new RetrofitHelper(Api.NEWS_HOST);
         retrofitHelper.getNews(hostType,id,startPage)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -29,12 +26,16 @@ public class NewsModel implements INewsModel{
 
                     @Override
                     public void onError(Throwable e) {
-                        iOnLoadListener.fail(e.getMessage());
+                        iNewsLoadListener.fail(e.getMessage());
                     }
 
                     @Override
                     public void onNext(NewsBean newsBean) {
-                        iOnLoadListener.success(newsBean);
+                        if (startPage!=0){
+                            iNewsLoadListener.loadMoreSuccess(newsBean);
+                        }else{
+                            iNewsLoadListener.success(newsBean);
+                        }
                     }
                 });
     }

@@ -8,18 +8,27 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
 
+import cn.edu.gdmec.android.myapplication.liereader.Bean.WeatherBean;
+import cn.edu.gdmec.android.myapplication.liereader.Http.RetrofitHelper;
 import cn.edu.gdmec.android.myapplication.liereader.Movie.FgMovieFragment;
 import cn.edu.gdmec.android.myapplication.liereader.MyFragmentAdapter;
 import cn.edu.gdmec.android.myapplication.liereader.News.FgNewsFragment;
 import cn.edu.gdmec.android.myapplication.liereader.Video.FgVideoFragment;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         ViewPager.OnPageChangeListener {
+    private static final String TAG="MainActicity";
     private View view_status;
     private ImageView iv_title_news;
     private ImageView iv_title_movie;
@@ -38,7 +47,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         initView();
         initContentFragment();
+        Integer[] city = {101280101, 101280102, 101280103, 101280104, 101280105, 101280201, 101280202, 101280203, 101280204, 101280205, 101280206, 101280207, 101280208, 101280501};
+        final RetrofitHelper retrofitHelper = new RetrofitHelper("http://wthrcdn.etouch.cn/");
+        Observable.from(city)
+                .flatMap(new Func1<Integer, Observable<WeatherBean>>() {
+                    @Override
+                    public Observable<WeatherBean> call(Integer integer) {
+                        return retrofitHelper.getWeather(integer);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<WeatherBean>() {
+                    @Override
+                    public void onCompleted() {
 
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i(TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(WeatherBean weatherBean) {
+                        Log.i(TAG, "onNext: "+weatherBean.getData().getCity()+" "
+                                +weatherBean.getData().getGanmao());
+                    }
+                });
     }
 
 
